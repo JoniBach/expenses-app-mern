@@ -2,15 +2,62 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { loginUser } from "../../actions/authActions";
 import classnames from "classnames";
+import {
+  Typography,
+  Box,
+  Grid,
+  Paper,
+  TextField,
+  Input,
+  IconButton,
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  Button,
+  FormHelperText,
+} from "@material-ui/core";
+import clsx from "clsx";
+import { createStyles, withStyles } from "@material-ui/core/styles";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
+
+const styles = (theme) => ({
+  root: {
+    display: "flex",
+    flexWrap: "wrap",
+    width: "100%",
+    marginTop: theme.spacing(5),
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
+  paper: {
+    margin: theme.spacing(1),
+    justify: "centre",
+    position: "absolute",
+    padding: theme.spacing(8),
+  },
+  withoutLabel: {
+    marginTop: theme.spacing(3),
+  },
+  textField: {
+    width: "25ch",
+  },
+  link: {
+    textAlign: "right",
+  },
+});
+
 class Login extends Component {
   constructor() {
     super();
     this.state = {
       email: "",
       password: "",
-      errors: {}
+      errors: {},
+      showPassword: false,
     };
   }
   componentDidMount() {
@@ -19,111 +66,127 @@ class Login extends Component {
       this.props.history.push("/dashboard");
     }
   }
-componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
       this.props.history.push("/dashboard"); // push user to dashboard when they login
     }
-if (nextProps.errors) {
+    if (nextProps.errors) {
       this.setState({
-        errors: nextProps.errors
+        errors: nextProps.errors,
       });
     }
   }
-onChange = e => {
+  onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
   };
-onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
-const userData = {
+    const userData = {
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
     };
-this.props.loginUser(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+    this.props.loginUser(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
   };
-render() {
+  handleChange = (prop) => (event) => {
+    this.setState({ [prop]: event.target.value });
+  };
+
+  handleClickShowPassword = () => {
+    this.setState({ showPassword: !this.state.showPassword });
+  };
+
+  handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  render() {
     const { errors } = this.state;
-return (
-      <div className="container">
-        <div style={{ marginTop: "4rem" }} className="row">
-          <div className="col s8 offset-s2">
-            <Link to="/" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back to
-              home
-            </Link>
-            <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
-                <b>Login</b> below
-              </h4>
-              <p className="grey-text text-darken-1">
-                Don't have an account? <Link to="/register">Register</Link>
-              </p>
-            </div>
+    const { classes } = this.props;
+
+    return (
+        <Box className="page" justifyContent="center">
+          <Paper className={classes.paper}>
+            <Typography variant="h5" align="center">
+              Log In
+            </Typography>
             <form noValidate onSubmit={this.onSubmit}>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  value={this.state.email}
-                  error={errors.email}
-                  id="email"
-                  type="email"
-                  className={classnames("", {
-                    invalid: errors.email || errors.emailnotfound
-                  })}
-                />
-                <label htmlFor="email">Email</label>
-                <span className="red-text">
-                  {errors.email}
-                  {errors.emailnotfound}
-                </span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  value={this.state.password}
-                  error={errors.password}
-                  id="password"
-                  type="password"
-                  className={classnames("", {
-                    invalid: errors.password || errors.passwordincorrect
-                  })}
-                />
-                <label htmlFor="password">Password</label>
-                <span className="red-text">
-                  {errors.password}
-                  {errors.passwordincorrect}
-                </span>
-              </div>
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <button
-                  style={{
-                    width: "150px",
-                    borderRadius: "3px",
-                    letterSpacing: "1.5px",
-                    marginTop: "1rem"
-                  }}
-                  type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-                >
-                  Login
-                </button>
-              </div>
+
+            <TextField
+              id="email"
+              label="Email"
+              className={clsx(classes.margin, classes.textField)}
+              // value={this.state.email}
+              helperText={errors.email || errors.emailnotfound}
+              error={errors.email || errors.emailnotfound ? true : false}
+              onChange={this.handleChange("email")}
+            />
+                        <span className="red-text">
+
+            </span>
+            <br />
+            <FormControl className={clsx(classes.margin, classes.textField)}>
+              <InputLabel htmlFor="standard-adornment-password">
+                Password
+              </InputLabel>
+              
+              <Input
+                id="password"
+                error={errors.email || errors.emailnotfound ? true : false}
+                type={this.state.showPassword ? "text" : "password"}
+                value={this.state.password}
+                onChange={this.handleChange("password")}
+                helperText={errors.email || errors.emailnotfound}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={this.handleClickShowPassword}
+                      onMouseDown={this.handleMouseDownPassword}
+                    >
+                      {this.state.showPassword ? (
+                        <Visibility />
+                      ) : (
+                        <VisibilityOff />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              <FormHelperText >
+                {errors.password || errors.passwordincorrect}
+              </FormHelperText>
+            </FormControl>
+            <br />
+            {/* <Link href="#" variant="body2" align="right"> */}
+            {/* <Typography align="right">{"Sign Up"}</Typography> */}
+            {this.state.email && this.state.password ? (
+              <Button variant="contained" color="primary" type="submit" >
+                Submit
+              </Button>
+            ) : (
+              
+
+              <Link to="/register"><Button color="primary">or sign up</Button> </Link>
+
+            )}
+            {/* </Link> */}
+            <br />
             </form>
-          </div>
-        </div>
-      </div>
+          </Paper>
+        </Box>
     );
   }
 }
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
 });
-export default connect(
-  mapStateToProps,
-  { loginUser }
+export default compose(
+  connect(mapStateToProps, { loginUser }),
+  withStyles(styles)
 )(Login);

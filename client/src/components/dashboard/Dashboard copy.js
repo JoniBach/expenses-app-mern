@@ -1,9 +1,7 @@
-
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
-import UserDashboardView from "../UserDashboardView/UserDashboardView"
 class Dashboard extends Component {
   onLogoutClick = e => {
     e.preventDefault();
@@ -36,7 +34,6 @@ return (
             </button>
           </div>
         </div>
-        <UserDashboardView />
       </div>
     );
   }

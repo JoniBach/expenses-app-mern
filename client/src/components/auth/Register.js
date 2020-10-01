@@ -3,7 +3,54 @@ import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
+import "./LoginView.css";
 import classnames from "classnames";
+import {
+  Typography,
+  Box,
+  Grid,
+  Paper,
+  TextField,
+  Input,
+  IconButton,
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  Button,
+  FormHelperText
+} from "@material-ui/core";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
+import { createStyles, withStyles } from "@material-ui/core/styles";
+import { compose } from "redux";
+
+const styles = (theme) => ({
+  root: {
+    display: "flex",
+    flexWrap: "wrap",
+    width: "100%",
+    marginTop: theme.spacing(5),
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
+  paper: {
+    margin: theme.spacing(1),
+    justify: "centre",
+    position: "absolute",
+    padding: theme.spacing(8),
+  },
+  withoutLabel: {
+    marginTop: theme.spacing(3),
+  },
+  textField: {
+    width: "25ch",
+  },
+  link: {
+    textAlign: "right",
+  },
+});
 class Register extends Component {
   constructor() {
     super();
@@ -12,7 +59,7 @@ class Register extends Component {
       email: "",
       password: "",
       password2: "",
-      errors: {}
+      errors: {},
     };
   }
   componentDidMount() {
@@ -21,132 +68,161 @@ class Register extends Component {
       this.props.history.push("/dashboard");
     }
   }
-componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({
-        errors: nextProps.errors
+        errors: nextProps.errors,
       });
     }
   }
-onChange = e => {
+  onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
   };
-onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
-const newUser = {
+    const newUser = {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
-      password2: this.state.password2
+      password2: this.state.password2,
     };
-this.props.registerUser(newUser, this.props.history); 
+    this.props.registerUser(newUser, this.props.history);
   };
-render() {
+  handleChange = (prop) => (event) => {
+    this.setState({ [prop]: event.target.value });
+  };
+
+  handleClickShowPassword = () => {
+    this.setState({ showPassword: !this.state.showPassword });
+  };
+
+  handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+  handleClickShowPassword2 = () => {
+    this.setState({ showPassword2: !this.state.showPassword2 });
+  };
+
+  handleMouseDownPassword2 = (event) => {
+    event.preventDefault();
+  };
+  render() {
     const { errors } = this.state;
-return (
-      <div className="container">
-        <div className="row">
-          <div className="col s8 offset-s2">
-            <Link to="/" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back to
-              home
-            </Link>
-            <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
-                <b>Register</b> below
-              </h4>
-              <p className="grey-text text-darken-1">
-                Already have an account? <Link to="/login">Log in</Link>
-              </p>
-            </div>
+    const { classes } = this.props;
+
+    return (
+      <Box className="page" justifyContent="center">
+          <Paper className={classes.paper}>
+            <Typography variant="h5" align="center">
+              Sign Up
+            </Typography>
             <form noValidate onSubmit={this.onSubmit}>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  value={this.state.name}
-                  error={errors.name}
-                  id="name"
-                  type="text"
-                  className={classnames("", {
-                    invalid: errors.name
-                  })}
-                />
-                <label htmlFor="name">Name</label>
-                <span className="red-text">{errors.name}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  value={this.state.email}
-                  error={errors.email}
-                  id="email"
-                  type="email"
-                  className={classnames("", {
-                    invalid: errors.email
-                  })}
-                />
-                <label htmlFor="email">Email</label>
-                <span className="red-text">{errors.email}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  value={this.state.password}
-                  error={errors.password}
-                  id="password"
-                  type="password"
-                  className={classnames("", {
-                    invalid: errors.password
-                  })}
-                />
-                <label htmlFor="password">Password</label>
-                <span className="red-text">{errors.password}</span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  value={this.state.password2}
-                  error={errors.password2}
-                  id="password2"
-                  type="password"
-                  className={classnames("", {
-                    invalid: errors.password2
-                  })}
-                />
-                <label htmlFor="password2">Confirm Password</label>
-                <span className="red-text">{errors.password2}</span>
-              </div>
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <button
-                  style={{
-                    width: "150px",
-                    borderRadius: "3px",
-                    letterSpacing: "1.5px",
-                    marginTop: "1rem"
-                  }}
-                  type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-                >
-                  Sign up
-                </button>
-              </div>
+            <TextField
+              id="name"
+              label="Name"
+              className={clsx(classes.margin, classes.textField)}
+              // value={this.state.name}
+              // helperText={errors.name || errors.namenotfound}
+              // error={errors.name || errors.namenotfound ? true : false}
+              onChange={this.handleChange("name")}
+            />
+                        <TextField
+              id="email"
+              label="Email"
+              className={clsx(classes.margin, classes.textField)}
+              // value={this.state.email}
+              helperText={errors.email || errors.emailnotfound}
+              error={errors.email || errors.emailnotfound ? true : false}
+              onChange={this.handleChange("email")}
+            />
+            <br />
+            <FormControl className={clsx(classes.margin, classes.textField)}>
+              <InputLabel htmlFor="standard-adornment-password">
+                Password
+              </InputLabel>
+              <Input
+                id="password"
+                error={errors.email || errors.emailnotfound ? true : false}
+                type={this.state.showPassword ? "text" : "password"}
+                value={this.state.password}
+                onChange={this.handleChange("password")}
+                helperText={errors.email || errors.emailnotfound}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={this.handleClickShowPassword}
+                      onMouseDown={this.handleMouseDownPassword}
+                    >
+                      {this.state.showPassword ? (
+                        <Visibility />
+                      ) : (
+                        <VisibilityOff />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              <FormHelperText >
+                {errors.password || errors.passwordincorrect}
+              </FormHelperText>
+            </FormControl>
+            <br />
+            <FormControl className={clsx(classes.margin, classes.textField)}>
+              <InputLabel htmlFor="standard-adornment-password">
+                Re enter Password
+              </InputLabel>
+              <Input
+                id="password2"
+                error={errors.password2? true : false}
+                type={this.state.showPassword ? "text" : "password2"}
+                value={this.state.password2}
+                onChange={this.handleChange("password2")}
+                helperText={errors.email || errors.emailnotfound}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={this.handleClickShowPassword2}
+                      onMouseDown={this.handleMouseDownPassword2}
+                    >
+                      {this.state.showPassword2 ? (
+                        <Visibility />
+                      ) : (
+                        <VisibilityOff />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              <FormHelperText >
+                {errors.password2}
+              </FormHelperText>
+            </FormControl>
+            {this.state.email && this.state.password && this.state.name && this.state.password && this.state.password2 ? (
+              <Button variant="contained" color="primary" type="submit" >
+                Submit
+              </Button>
+            ) : (
+              <Link to="/login"><Button color="primary">or return to login</Button> </Link>
+            )}
+            <br />
             </form>
-          </div>
-        </div>
-      </div>
+          </Paper>
+        </Box>
     );
   }
 }
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
 });
-export default connect(
-  mapStateToProps,
-  { registerUser }
-)(withRouter(Register));
+export default compose(
+  connect(mapStateToProps, { registerUser }),
+  withStyles(styles)
+)(Register);
