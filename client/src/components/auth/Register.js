@@ -142,11 +142,11 @@ class Register extends Component {
               </InputLabel>
               <Input
                 id="password"
-                error={errors.email || errors.emailnotfound ? true : false}
+                error={errors.password ? true : false}
                 type={this.state.showPassword ? "text" : "password"}
                 value={this.state.password}
                 onChange={this.handleChange("password")}
-                helperText={errors.email || errors.emailnotfound}
+                helperText={errors.password}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -164,7 +164,7 @@ class Register extends Component {
                 }
               />
               <FormHelperText >
-                {errors.password || errors.passwordincorrect}
+                {errors.password }
               </FormHelperText>
             </FormControl>
             <br />
@@ -174,11 +174,11 @@ class Register extends Component {
               </InputLabel>
               <Input
                 id="password2"
-                error={errors.password2? true : false}
-                type={this.state.showPassword ? "text" : "password2"}
+                error={errors.password? true : false}
+                type={this.state.showPassword2 ? "text" : "password"}
                 value={this.state.password2}
                 onChange={this.handleChange("password2")}
-                helperText={errors.email || errors.emailnotfound}
+                helperText={errors.password}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
