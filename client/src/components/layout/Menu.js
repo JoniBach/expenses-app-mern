@@ -68,7 +68,7 @@ const Menu = ({ state }) => {
                       ref={(el) => (line1 = el)}
                       to="/register"
                     >
-                      Sgn Up
+                      Sign Up
                     </Link>
                   </li>
                   <li>
