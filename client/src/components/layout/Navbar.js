@@ -4,8 +4,7 @@ class Navbar extends Component {
   render() {
     return (
       <div className="navbar-fixed">
-        <nav className="z-depth-0">
-          <div className="nav-wrapper white">
+
             <Link
               to="/"
               style={{
@@ -16,10 +15,10 @@ class Navbar extends Component {
               <i className="material-icons">code</i>
               MERN
             </Link>
-          </div>
-        </nav>
+         
       </div>
     );
   }
 }
 export default Navbar;
+

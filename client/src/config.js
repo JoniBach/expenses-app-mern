@@ -17,8 +17,8 @@ import LogOutMenuItem from "./components/UserDashboardView/LogOutMenuItem"
 import SecurityView from "./components/SecurityView/SecurityView";
 export const config = {
   appID: {
-    displayName: "Money Tracker",
-    author: "James Crook",
+    displayName: "iSAVR.",
+    author: "JoniBach",
   },
   securitySettings: {
     catagories: [

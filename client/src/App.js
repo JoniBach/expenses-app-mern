@@ -13,6 +13,7 @@ import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
 // import LoginView from "./components/LoginView/LoginView";
 import UserDashboardView from "./components/UserDashboardView/UserDashboardView"
+import { UploadContext, UploadProvider } from "./contexts/UploadContext";
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -35,6 +36,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
+        <UploadProvider>
         <Router>
           <div className="App">
             <Route exact path="/" component={Landing} />
@@ -45,6 +47,7 @@ class App extends Component {
             </Switch>
           </div>
         </Router>
+        </UploadProvider>
       </Provider>
     );
   }
