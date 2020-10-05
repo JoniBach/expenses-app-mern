@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Box,
   Avatar,
@@ -51,8 +51,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function UserProfile(props) {
-  const  {user}  = props.auth;
-  console.log('UserProfile: ',user)
+  const { user } = props.auth;
+  console.log('UserProfile: ', user)
   const classes = useStyles();
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [userDetails, setUserDetails] = useState({
@@ -73,6 +73,9 @@ function UserProfile(props) {
     dob: user.dob,
     mob: user.mob,
   });
+
+  console.log('user details', userDetails)
+  console.log('previous user details', prvUserDetails)
   const handleChange = (prop) => (event) => {
     setPrvUserDetails({ ...prvUserDetails, [prop]: event.target.value });
   };
@@ -83,9 +86,11 @@ function UserProfile(props) {
   const onAvatarChange = (prop) => (event) => {
     setUserDetails({ ...userDetails, avatar: event.target.files });
   }
-  const onSubmit = (prop) => (event)  => {
+  const [complete, setComplete] = useState(false)
+
+  const onSubmit = (prop) => (event) => {
     event.preventDefault();
-    setUserDetails({ 
+    setUserDetails({
       ...userDetails,
       _id: prvUserDetails._id,
       name: prvUserDetails.name,
@@ -94,12 +99,17 @@ function UserProfile(props) {
       mob: prvUserDetails.mob,
       email: prvUserDetails.email,
     });
-    props.updateUser(userDetails, props.history)
     setIsEditProfile(false);
+
   };
-  const onCancel = (prop) => (event)  => {
+  useEffect(() => {
+    props.updateUser(userDetails, props.history);
+    console.log('updating user', userDetails)
+  }, [userDetails]);
+
+  const onCancel = (prop) => (event) => {
     event.preventDefault();
-    setPrvUserDetails({ 
+    setPrvUserDetails({
       ...prvUserDetails,
       _id: prvUserDetails._id,
       name: userDetails.name,
@@ -107,7 +117,7 @@ function UserProfile(props) {
       dob: userDetails.dob,
       mob: userDetails.mob,
       email: userDetails.email,
-    })
+    });
     setIsEditProfile(false);
     // TODO: create props.updateUser()
     // props.registerUser(userDetails, props.history);
@@ -115,85 +125,85 @@ function UserProfile(props) {
 
   return (
     // <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <Box display="flex" flexDirection="column" alignItems="center">
-          {!isEditProfile ? (
-            <Avatar className={classes.avatar} src={userDetails.avatar} />
-          ) : (
+    <Paper className={classes.paper}>
+      <Box display="flex" flexDirection="column" alignItems="center">
+        {!isEditProfile ? (
+          <Avatar className={classes.avatar} src={userDetails.avatar} />
+        ) : (
             <>
-              <Avatar className={classes.avatar} src={userDetails.avatar}  />
+              <Avatar className={classes.avatar} src={userDetails.avatar} />
               <Link>Change Profile Picture</Link>
               <input
-        type="file"
-        onChange={handleChange('avatar')}
-      />
+                type="file"
+                onChange={handleChange('avatar')}
+              />
             </>
           )}
-          <form noValidate autoComplete="off" className={classes.item} 
-          // onSubmit={() => handleSubmit()}
-          >
-            {config.userProfile.userDetailsForm.map((d, i) =>
-              isEditProfile ? (
-                <TextField
-                  label={d.label}
-                  value={prvUserDetails[d.key]}
-                  onChange={handleChange(d.key)}
-                  fullWidth
-                  className={classes.textField}
-                />
-              ) : (
+        <form noValidate autoComplete="off" className={classes.item}
+        // onSubmit={() => handleSubmit()}
+        >
+          {config.userProfile.userDetailsForm.map((d, i) =>
+            isEditProfile ? (
+              <TextField
+                label={d.label}
+                value={prvUserDetails[d.key]}
+                onChange={handleChange(d.key)}
+                fullWidth
+                className={classes.textField}
+              />
+            ) : (
                 <Grid container>
-                      <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="user-profile-content">
-        <TableBody>
-            <TableRow key={d.key}>
-              <TableCell component="th" scope="row">
-                {d.label}
-              </TableCell>
-              <TableCell align="right">{prvUserDetails[d.key]}</TableCell>
-            </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+                  <TableContainer component={Paper}>
+                    <Table className={classes.table} aria-label="user-profile-content">
+                      <TableBody>
+                        <TableRow key={d.key}>
+                          <TableCell component="th" scope="row">
+                            {d.label}
+                          </TableCell>
+                          <TableCell align="right">{prvUserDetails[d.key]}</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
                 </Grid>
               )
-            )}
-          
+          )}
+
           {isEditProfile ? (
             <div>
-            <Button
-              onClick={onSubmit()}
-              variant="contained"
-              color="primary"
+              <Button
+                onClick={onSubmit()}
+                variant="contained"
+                color="primary"
               // type="submit"
-            >
-              {" "}
+              >
+                {" "}
               Submit
             </Button>
-            <Button
-              onClick={onCancel()}
-              variant="outlined"
-              color="secondary"
+              <Button
+                onClick={onCancel()}
+                variant="outlined"
+                color="secondary"
               // type="submit"
-            >
-              {" "}
+              >
+                {" "}
               Cancel
             </Button>
             </div>
 
           ) : (
-            <Button
-              onClick={() => setIsEditProfile(true)}
-              variant="outlined"
-              color="primary"
-            >
-              {" "}
+              <Button
+                onClick={() => setIsEditProfile(true)}
+                variant="outlined"
+                color="primary"
+              >
+                {" "}
               Edit
-            </Button>
-          )}
-          </form>
-        </Box>
-      </Paper>
+              </Button>
+            )}
+        </form>
+      </Box>
+    </Paper>
     // </div>
   );
 }
