@@ -17,6 +17,7 @@ import { connect } from "react-redux";
 import { config } from "../../config";
 import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 import { registerUser } from "../../actions/authActions";
+import { updateUser } from "../../actions/authActions";
 import { compose } from "redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -51,10 +52,11 @@ const useStyles = makeStyles((theme) => ({
 
 function UserProfile(props) {
   const  {user}  = props.auth;
-  console.log('sName: ',user)
+  console.log('UserProfile: ',user)
   const classes = useStyles();
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [userDetails, setUserDetails] = useState({
+    _id: user._id,
     name: user.name,
     sName: user.sName,
     email: user.email,
@@ -63,6 +65,7 @@ function UserProfile(props) {
     mob: user.mob,
   });
   const [prvUserDetails, setPrvUserDetails] = useState({
+    _id: user._id,
     name: user.name,
     sName: user.sName,
     email: user.email,
@@ -84,20 +87,21 @@ function UserProfile(props) {
     event.preventDefault();
     setUserDetails({ 
       ...userDetails,
+      _id: prvUserDetails._id,
       name: prvUserDetails.name,
       sName: prvUserDetails.sName,
       dob: prvUserDetails.dob,
       mob: prvUserDetails.mob,
       email: prvUserDetails.email,
-    })
+    });
+    props.updateUser(userDetails, props.history)
     setIsEditProfile(false);
-    // TODO: create props.updateUser()
-    // props.registerUser(userDetails, props.history);
   };
   const onCancel = (prop) => (event)  => {
     event.preventDefault();
     setPrvUserDetails({ 
       ...prvUserDetails,
+      _id: prvUserDetails._id,
       name: userDetails.name,
       sName: userDetails.sName,
       dob: userDetails.dob,
@@ -195,7 +199,7 @@ function UserProfile(props) {
 }
 
 UserProfile.propTypes = {
-  registerUser: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 };
@@ -204,6 +208,6 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 });
 export default compose(
-  connect(mapStateToProps, { registerUser })
+  connect(mapStateToProps, { updateUser })
   // withStyles(styles)
 )(UserProfile);
