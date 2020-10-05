@@ -157,7 +157,7 @@ export const config = {
     userDetailsForm: [
       {
         label: "First Name",
-        key: "fName",
+        key: "name",
       },
       {
         label: "Last Name",

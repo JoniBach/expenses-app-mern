@@ -17,7 +17,7 @@ import {
   FormControl,
   InputLabel,
   Button,
-  FormHelperText
+  FormHelperText,
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
@@ -56,6 +56,9 @@ class Register extends Component {
     super();
     this.state = {
       name: "",
+      sName: "",
+      dob: "",
+      mob: "",
       email: "",
       password: "",
       password2: "",
@@ -82,6 +85,9 @@ class Register extends Component {
     e.preventDefault();
     const newUser = {
       name: this.state.name,
+      sName: this.state.sName,
+      dob: this.state.dob,
+      dob: this.state.dob,
       email: this.state.email,
       password: this.state.password,
       password2: this.state.password2,
@@ -112,12 +118,13 @@ class Register extends Component {
 
     return (
       <Box className="page" justifyContent="center">
-          <Paper className={classes.paper}>
-            <Typography variant="h5" align="center">
-              Sign Up
-            </Typography>
-            <form noValidate onSubmit={this.onSubmit}>
+        <Paper className={classes.paper}>
+          <Typography variant="h5" align="center">
+            Sign Up
+          </Typography>
+          <form noValidate onSubmit={this.onSubmit}>
             <TextField
+            required
               id="name"
               label="Name"
               className={clsx(classes.margin, classes.textField)}
@@ -127,9 +134,20 @@ class Register extends Component {
               onChange={this.handleChange("name")}
             />
             <br />
-
-                        <TextField
-              id="email"
+            <TextField
+            required
+            id="sName"
+              label="Surname"
+              className={clsx(classes.margin, classes.textField)}
+              // value={this.state.name}
+              // helperText={errors.name || errors.namenotfound}
+              // error={errors.name || errors.namenotfound ? true : false}
+              onChange={this.handleChange("sName")}
+            />
+            <br />
+            <TextField
+            required
+            id="email"
               label="Email"
               className={clsx(classes.margin, classes.textField)}
               // value={this.state.email}
@@ -138,7 +156,10 @@ class Register extends Component {
               onChange={this.handleChange("email")}
             />
             <br />
-            <FormControl className={clsx(classes.margin, classes.textField)}>
+            <FormControl 
+            required
+            
+            className={clsx(classes.margin, classes.textField)}>
               <InputLabel htmlFor="standard-adornment-password">
                 Password
               </InputLabel>
@@ -165,18 +186,19 @@ class Register extends Component {
                   </InputAdornment>
                 }
               />
-              <FormHelperText >
-                {errors.password }
-              </FormHelperText>
+              <FormHelperText>{errors.password}</FormHelperText>
             </FormControl>
             <br />
-            <FormControl className={clsx(classes.margin, classes.textField)}>
+            <FormControl 
+            required
+            
+            className={clsx(classes.margin, classes.textField)}>
               <InputLabel htmlFor="standard-adornment-password">
                 Re enter Password
               </InputLabel>
               <Input
                 id="password2"
-                error={errors.password? true : false}
+                error={errors.password ? true : false}
                 type={this.state.showPassword2 ? "text" : "password"}
                 value={this.state.password2}
                 onChange={this.handleChange("password2")}
@@ -197,22 +219,48 @@ class Register extends Component {
                   </InputAdornment>
                 }
               />
-              <FormHelperText >
-                {errors.password2}
-              </FormHelperText>
+              <FormHelperText>{errors.password2}</FormHelperText>
             </FormControl>
             <br />
-            {this.state.email && this.state.password && this.state.name && this.state.password && this.state.password2 ? (
-              <Button variant="contained" color="primary" type="submit" >
+            <TextField
+              id="dob"
+              label="Date of Birth"
+              className={clsx(classes.margin, classes.textField)}
+              // value={this.state.name}
+              // helperText={errors.name || errors.namenotfound}
+              // error={errors.name || errors.namenotfound ? true : false}
+              onChange={this.handleChange("dob")}
+            />
+            <br />
+            <TextField
+              id="mob"
+              label="Mobile Number"
+              className={clsx(classes.margin, classes.textField)}
+              // value={this.state.name}
+              // helperText={errors.name || errors.namenotfound}
+              // error={errors.name || errors.namenotfound ? true : false}
+              onChange={this.handleChange("mob")}
+            />
+            <br />
+            
+            {this.state.email &&
+            this.state.password &&
+            this.state.name &&
+            this.state.sName &&
+            this.state.password &&
+            this.state.password2 ? (
+              <Button variant="contained" color="primary" type="submit">
                 Submit
               </Button>
             ) : (
-              <Link to="/login"><Button color="primary">or return to login</Button> </Link>
+              <Link to="/login">
+                <Button color="primary">or return to login</Button>{" "}
+              </Link>
             )}
             <br />
-            </form>
-          </Paper>
-        </Box>
+          </form>
+        </Paper>
+      </Box>
     );
   }
 }
