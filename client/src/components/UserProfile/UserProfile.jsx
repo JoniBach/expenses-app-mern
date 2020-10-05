@@ -77,9 +77,6 @@ function UserProfile(props) {
   return (
     // <div className={classes.root}>
       <Paper className={classes.paper}>
-              <b>Hey there,</b> {user.name.split(" ")[0]}
-
-      
         <Box display="flex" flexDirection="column" alignItems="center">
           {!isEditProfile ? (
             <Avatar className={classes.avatar} src={userDetails.avatar} />
