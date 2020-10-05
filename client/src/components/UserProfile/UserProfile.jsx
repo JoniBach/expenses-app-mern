@@ -11,6 +11,9 @@ import {
   Divider,
   Paper,
 } from "@material-ui/core";
+import { logoutUser } from "../../actions/authActions";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { config } from "../../config";
 import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 
@@ -44,12 +47,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UserProfile() {
+function UserProfile(props) {
+  const  {user}  = props.auth;
+
   const classes = useStyles();
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [userDetails, setUserDetails] = useState({
-    fName: "James",
-    sName: "Crook",
+    fName: user.name.split(" ")[0],
+    sName: user.name.split(" ")[0],
     email: "jamescrook@email.com",
     avatar: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
     password: "password",
@@ -68,9 +73,13 @@ export default function UserProfile() {
   const onAvatarChange = (prop) => (event) => {
     setUserDetails({ ...userDetails, avatar: event.target.files });
   }
+
   return (
     // <div className={classes.root}>
       <Paper className={classes.paper}>
+              <b>Hey there,</b> {user.name.split(" ")[0]}
+
+      
         <Box display="flex" flexDirection="column" alignItems="center">
           {!isEditProfile ? (
             <Avatar className={classes.avatar} src={userDetails.avatar} />
@@ -126,3 +135,11 @@ export default function UserProfile() {
     // </div>
   );
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(UserProfile);

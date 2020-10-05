@@ -14,6 +14,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 // import LoginView from "./components/LoginView/LoginView";
 import UserDashboardView from "./components/UserDashboardView/UserDashboardView"
 import { UploadContext, UploadProvider } from "./contexts/UploadContext";
+import UserProfile from "./components/UserProfile/UserProfile";
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -44,6 +45,8 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Switch>
               <PrivateRoute  path="/dashboard" component={UserDashboardView} />
+              <PrivateRoute  path="/userprofile" component={UserProfile} />
+              
             </Switch>
           </div>
         </Router>

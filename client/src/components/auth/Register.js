@@ -126,6 +126,8 @@ class Register extends Component {
               // error={errors.name || errors.namenotfound ? true : false}
               onChange={this.handleChange("name")}
             />
+            <br />
+
                         <TextField
               id="email"
               label="Email"
@@ -199,6 +201,7 @@ class Register extends Component {
                 {errors.password2}
               </FormHelperText>
             </FormControl>
+            <br />
             {this.state.email && this.state.password && this.state.name && this.state.password && this.state.password2 ? (
               <Button variant="contained" color="primary" type="submit" >
                 Submit

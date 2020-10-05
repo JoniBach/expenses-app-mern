@@ -1,16 +1,14 @@
-
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
-import UserDashboardView from "../UserDashboardView/UserDashboardView"
-class Dashboard extends Component {
-  onLogoutClick = e => {
+function Dashboard(props) {
+  const onLogoutClick = e => {
     e.preventDefault();
-    this.props.logoutUser();
+    props.logoutUser();
   };
-render() {
-    const { user } = this.props.auth;
+
+    const  {user} = props.auth;
 return (
       <div style={{ height: "75vh" }} className="container valign-wrapper">
         <div className="row">
@@ -29,17 +27,15 @@ return (
                 letterSpacing: "1.5px",
                 marginTop: "1rem"
               }}
-              onClick={this.onLogoutClick}
+              onClick={onLogoutClick}
               className="btn btn-large waves-effect waves-light hoverable blue accent-3"
             >
               Logout
             </button>
           </div>
         </div>
-        <UserDashboardView />
       </div>
     );
-  }
 }
 Dashboard.propTypes = {
   logoutUser: PropTypes.func.isRequired,
