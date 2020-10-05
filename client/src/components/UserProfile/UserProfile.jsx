@@ -53,8 +53,8 @@ function UserProfile(props) {
   const classes = useStyles();
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [userDetails, setUserDetails] = useState({
-    fName: user.name.split(" ")[0],
-    sName: user.name.split(" ")[0],
+    name: user.name.split(" ")[0],
+    sName: user.sName.split(" ")[0],
     email: "jamescrook@email.com",
     avatar: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
     password: "password",
