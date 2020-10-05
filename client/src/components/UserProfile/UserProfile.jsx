@@ -59,22 +59,55 @@ function UserProfile(props) {
     sName: user.sName,
     email: user.email,
     avatar: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
-    password: "password",
-    oldPassword: "",
-    newPassowrd: "",
+    dob: user.dob,
+    mob: user.mob,
+  });
+  const [prvUserDetails, setPrvUserDetails] = useState({
+    name: user.name,
+    sName: user.sName,
+    email: user.email,
+    avatar: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
     dob: user.dob,
     mob: user.mob,
   });
   const handleChange = (prop) => (event) => {
-    setUserDetails({ ...userDetails, [prop]: event.target.value });
+    setPrvUserDetails({ ...prvUserDetails, [prop]: event.target.value });
   };
   const handleSubmit = (prop) => (event) => {
     setIsEditProfile(false);
-    setUserDetails({ ...userDetails, [prop]: event.target.value });
+    // setUserDetails({ ...userDetails, [prop]: event.target.value });
   };
   const onAvatarChange = (prop) => (event) => {
     setUserDetails({ ...userDetails, avatar: event.target.files });
   }
+  const onSubmit = (prop) => (event)  => {
+    event.preventDefault();
+    setUserDetails({ 
+      ...userDetails,
+      name: prvUserDetails.name,
+      sName: prvUserDetails.sName,
+      dob: prvUserDetails.dob,
+      mob: prvUserDetails.mob,
+      email: prvUserDetails.email,
+    })
+    setIsEditProfile(false);
+    // TODO: create props.updateUser()
+    // props.registerUser(userDetails, props.history);
+  };
+  const onCancel = (prop) => (event)  => {
+    event.preventDefault();
+    setPrvUserDetails({ 
+      ...prvUserDetails,
+      name: userDetails.name,
+      sName: userDetails.sName,
+      dob: userDetails.dob,
+      mob: userDetails.mob,
+      email: userDetails.email,
+    })
+    setIsEditProfile(false);
+    // TODO: create props.updateUser()
+    // props.registerUser(userDetails, props.history);
+  };
 
   return (
     // <div className={classes.root}>
@@ -92,12 +125,14 @@ function UserProfile(props) {
       />
             </>
           )}
-          <form noValidate autoComplete="off" className={classes.item}>
+          <form noValidate autoComplete="off" className={classes.item} 
+          // onSubmit={() => handleSubmit()}
+          >
             {config.userProfile.userDetailsForm.map((d, i) =>
               isEditProfile ? (
                 <TextField
                   label={d.label}
-                  value={userDetails[d.key]}
+                  value={prvUserDetails[d.key]}
                   onChange={handleChange(d.key)}
                   fullWidth
                   className={classes.textField}
@@ -111,7 +146,7 @@ function UserProfile(props) {
               <TableCell component="th" scope="row">
                 {d.label}
               </TableCell>
-              <TableCell align="right">{userDetails[d.key]}</TableCell>
+              <TableCell align="right">{prvUserDetails[d.key]}</TableCell>
             </TableRow>
         </TableBody>
       </Table>
@@ -119,16 +154,29 @@ function UserProfile(props) {
                 </Grid>
               )
             )}
-          </form>
+          
           {isEditProfile ? (
+            <div>
             <Button
-              onClick={handleSubmit()}
+              onClick={onSubmit()}
               variant="contained"
               color="primary"
+              // type="submit"
             >
               {" "}
               Submit
             </Button>
+            <Button
+              onClick={onCancel()}
+              variant="outlined"
+              color="secondary"
+              // type="submit"
+            >
+              {" "}
+              Cancel
+            </Button>
+            </div>
+
           ) : (
             <Button
               onClick={() => setIsEditProfile(true)}
@@ -139,6 +187,7 @@ function UserProfile(props) {
               Edit
             </Button>
           )}
+          </form>
         </Box>
       </Paper>
     // </div>
