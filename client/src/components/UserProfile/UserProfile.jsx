@@ -9,13 +9,15 @@ import {
   Card,
   Grid,
   Divider,
-  Paper,
+  Paper, Table, TableBody, TableCell, TableContainer, TableRow
 } from "@material-ui/core";
 import { logoutUser } from "../../actions/authActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { config } from "../../config";
 import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
+import { registerUser } from "../../actions/authActions";
+import { compose } from "redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,19 +51,19 @@ const useStyles = makeStyles((theme) => ({
 
 function UserProfile(props) {
   const  {user}  = props.auth;
-
+  console.log('sName: ',user)
   const classes = useStyles();
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [userDetails, setUserDetails] = useState({
-    name: user.name.split(" ")[0],
-    sName: user.sName.split(" ")[0],
-    email: "jamescrook@email.com",
+    name: user.name,
+    sName: user.sName,
+    email: user.email,
     avatar: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
     password: "password",
     oldPassword: "",
     newPassowrd: "",
-    dob: "01/02/2003",
-    mob: "07123456789",
+    dob: user.dob,
+    mob: user.mob,
   });
   const handleChange = (prop) => (event) => {
     setUserDetails({ ...userDetails, [prop]: event.target.value });
@@ -102,8 +104,18 @@ function UserProfile(props) {
                 />
               ) : (
                 <Grid container>
-                    <Grid item xs={6} className={classes.item}><Typography align="right">{d.label} </Typography></Grid>
-                    <Grid item xs={6} className={classes.item}><Typography>{userDetails[d.key]}</Typography></Grid>
+                      <TableContainer component={Paper}>
+      <Table className={classes.table} aria-label="user-profile-content">
+        <TableBody>
+            <TableRow key={d.key}>
+              <TableCell component="th" scope="row">
+                {d.label}
+              </TableCell>
+              <TableCell align="right">{userDetails[d.key]}</TableCell>
+            </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
                 </Grid>
               )
             )}
@@ -133,10 +145,16 @@ function UserProfile(props) {
   );
 }
 
-const mapStateToProps = state => ({
-  auth: state.auth
+UserProfile.propTypes = {
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+};
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  errors: state.errors,
 });
-export default connect(
-  mapStateToProps,
-  { logoutUser }
+export default compose(
+  connect(mapStateToProps, { registerUser })
+  // withStyles(styles)
 )(UserProfile);
