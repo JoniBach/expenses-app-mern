@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
+// const User = require("../../models/User")
 // Load input validation
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
@@ -45,6 +46,36 @@ router.post("/register", (req, res) => {
       }
     });
   });
+// @route POST api/users/update
+// @desc Update user
+// @access Public
+  router.post("/update", (req, res) => {
+    var _id = req.body._id;
+    var userInfo = {
+          name: req.body.name,
+          sName: req.body.sName,
+          dob: req.body.dob,
+          mob: req.body.mob,
+          email: req.body.email,
+    };
+  
+    User.findByIdAndUpdate(_id, userInfo, { new: true }, function(
+      err,
+      userInfo
+    ) {
+      if (err) {
+        console.log("err", err);
+        res.status(500).send(err);
+      } else {
+        console.log("package retrieved, sending: ", userInfo);
+        // res.send(userInfo);
+        userInfo
+        .save()
+        .then(user => res.json(user))
+        .catch(err => console.log(err));
+      }
+    });
+  });
 
   // @route POST api/users/login
 // @desc Login user and return JWT token
@@ -70,7 +101,7 @@ router.post("/login", (req, res) => {
           // User matched
           // Create JWT Payload
           const payload = {
-            id: user.id,
+            _id: user._id,
             name: user.name,
             sName: user.sName,
             email: user.email,
