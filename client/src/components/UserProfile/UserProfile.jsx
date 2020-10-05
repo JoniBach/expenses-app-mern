@@ -11,8 +11,9 @@ import {
   Divider,
   Paper, Table, TableBody, TableCell, TableContainer, TableRow
 } from "@material-ui/core";
-import { logoutUser } from "../../actions/authActions";
+import { logoutUser, loginUser } from "../../actions/authActions";
 import PropTypes from "prop-types";
+import store from "../../store";
 import { connect } from "react-redux";
 import { config } from "../../config";
 import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
@@ -51,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function UserProfile(props) {
+  console.log('props', props)
   const { user } = props.auth;
   console.log('UserProfile: ', user)
   const classes = useStyles();
@@ -100,11 +102,15 @@ function UserProfile(props) {
       email: prvUserDetails.email,
     });
     setIsEditProfile(false);
-
+    setComplete(true);
   };
   useEffect(() => {
-    props.updateUser(userDetails, props.history);
-    console.log('updating user', userDetails)
+    if (complete) {
+      props.updateUser(userDetails, props.history);
+      console.log('updating user', userDetails);
+    store.dispatch(logoutUser());
+
+    }
   }, [userDetails]);
 
   const onCancel = (prop) => (event) => {
@@ -217,7 +223,5 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
 });
-export default compose(
-  connect(mapStateToProps, { updateUser })
-  // withStyles(styles)
-)(UserProfile);
+export default 
+  connect(mapStateToProps, { updateUser })(UserProfile);

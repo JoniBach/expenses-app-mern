@@ -68,11 +68,14 @@ router.post("/register", (req, res) => {
         res.status(500).send(err);
       } else {
         console.log("package retrieved, sending: ", userInfo);
+        // Sign token
+      
         // res.send(userInfo);
         userInfo
         .save()
         .then(user => res.json(user))
         .catch(err => console.log(err));
+        
       }
     });
   });
@@ -108,6 +111,8 @@ router.post("/login", (req, res) => {
             dob: user.dob,
             mob: user.mob
           };
+          console.log('payload: ', payload)
+
   // Sign token
           jwt.sign(
             payload,
