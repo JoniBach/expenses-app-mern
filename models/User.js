@@ -4,32 +4,44 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   sName: {
     type: String,
-    required: true
+    required: true,
   },
-  
+
   email: {
     type: String,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   dob: {
     type: String,
-    required: true
+    required: true,
   },
   mob: {
     type: String,
-    required: true
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
+  uploadData: {
+    type: Object,
+  },
+  processedText: {
+    type: String,
+  },
+  storeName: {
+    type: String,
+  },
+  totalAmount: {
+    type: String,
+  },
 });
 module.exports = User = mongoose.model("users", UserSchema);

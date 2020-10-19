@@ -136,4 +136,59 @@ router.post("/login", (req, res) => {
     });
   });
 
+ // @route POST api/users/upload
+// @desc Update user
+// @access Public
+router.post("/upload", (req, res) => {
+  // not getting id
+  var _id = req.body._id;
+  console.log('body: ',req.body)
+  // console.log('user: ',_id)
+  var userInfo = {
+        // name: req.body.name,
+        // sName: req.body.sName,
+        // dob: req.body.dob,
+        // mob: req.body.mob,
+        // email: req.body.email,
+        uploadData: [{
+          processedText: req.body.processedText,
+          storeName: req.body.storeName,
+          totalAmount: req.body.totalAmount,
+        }],
+  };
+  console.log('upload data: ',userInfo)
+
+  User.findByIdAndUpdate(_id, userInfo, { new: true }, function(
+    err,
+    userInfo
+  ) {
+    if (err) {
+      console.log("err", err);
+      res.status(500).send(err);
+    } else {
+      var userData = {
+        // name: req.body.name,
+        // sName: req.body.sName,
+        // dob: req.body.dob,
+        // mob: req.body.mob,
+        // email: req.body.email,
+        uploadData: [{
+          processedText: req.body.processedText,
+          storeName: req.body.storeName,
+          totalAmount: req.body.totalAmount,
+        }],
+  };
+      console.log("package retrieved, sending: ", userData);
+      // Sign token
+    
+      // res.send(userInfo);
+      userData
+      .save()
+      .then(user => res.json(user))
+      .catch(err => console.log(err));
+      
+    }
+  });
+});
+
   module.exports = router;

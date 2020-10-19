@@ -31,6 +31,19 @@ export const updateUser = (userData, history) => dispatch => {
       })
     );
 };
+// upload user
+export const upload = (userData, history) => dispatch => {
+  console.log('upload new data to user acocunt')
+  axios
+    .post("/api/users/upload", userData)
+    // .then(res => history.push("/userprofile")) // re-direct to login on successful register
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 // Login - get user token
 export const loginUser = userData => dispatch => {
   axios

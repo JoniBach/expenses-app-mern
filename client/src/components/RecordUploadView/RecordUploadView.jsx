@@ -6,6 +6,11 @@ import { UploadContext } from "../../contexts/UploadContext";
 import RecordDetailer from "./RecordDetailer";
 import OcrConverter from "./OcrConverter";
 import PreUploadSummaryViewer from "./PreUploadSummaryViewer";
+import PropTypes from "prop-types";
+import store from "../../store";
+import { logoutUser, loginUser } from "../../actions/authActions";
+import { connect } from "react-redux";
+import { upload } from "../../actions/authActions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -19,7 +24,8 @@ function getSteps() {
   return ["Upload Receipt", "Enter Shop Details", "Review & Submit"];
 }
 
-export default function RecordUploadView() {
+function RecordUploadView(props) {
+  const { user } = props.auth;
   const classes = useStyles();
   const [uploadData, setUploadData] = useContext(UploadContext);
   const useFetch = (url) => {
@@ -38,16 +44,50 @@ export default function RecordUploadView() {
     return [data];
   };
   const fetchUploadData = useFetch("http://localhost:4000/api");
-  const onSubmit = () => {
-    const formData = new FormData();
-    formData.append("uploadedData", uploadData);
-    axios
-      .post("http://localhost:4000/api/user-profile", formData, {})
-      .then((res) => {
-        console.log(res);
-      })
-      .then(fetchUploadData);
+  // const onSubmit = () => {
+  //   const formData = new FormData();
+  //   formData.append("uploadedData", uploadData);
+  //   axios
+  //     .post("http://localhost:4000/api/user-profile", formData, {})
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .then(fetchUploadData);
+  // };
+//   const onSubmit = (e) => {
+//     e.preventDefault();
+//     const formData = new FormData();
+//     formData.append('myfile',uploadData);
+//     const config = {
+//         headers: {
+//             'content-type': 'multipart/form-data'
+//         }
+//     };
+//     axios.post("http://localhost:4000/api/upload",formData,config)
+//         .then((response) => {
+//             alert("The data has been successfully uploaded");
+//         }).catch((error) => {
+//     });
+// }
+const [complete, setComplete] = useState(false)
+console.log('complete',setComplete)
+const onSubmit = (event) => {
+  setUploadData({
+    ...uploadData,
+    _id: user._id,
+  });
+    event.preventDefault();
+    setComplete(true);
   };
+  useEffect(() => {
+    if (complete) {
+      props.upload(uploadData, props.history);
+      console.log('uploading data', uploadData);
+    // store.dispatch(logoutUser());
+
+    }
+  }, [complete]);
+
 
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
@@ -91,7 +131,11 @@ export default function RecordUploadView() {
           Back
         </Button>
         {uploadData.isComplete || activeStep === steps.length - 1 ? (
-          <Button variant="contained" color="primary" onClick={handleNext}>
+          <Button variant="contained" color="primary" 
+          onClick={
+         handleNext
+          }
+          >
             {activeStep === steps.length - 1 ? "Upload" : "Next"}
           </Button>
         ) : (
@@ -109,3 +153,16 @@ export default function RecordUploadView() {
     </Paper>
   );
 }
+
+RecordUploadView.propTypes = {
+  upload: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+};
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  errors: state.errors,
+});
+export default 
+  connect(mapStateToProps, { upload })(RecordUploadView);
+
