@@ -1,5 +1,6 @@
-const router = require('express').Router();
-let Content = require('../models/Content');
+const 
+router = require('express').Router();
+let Content = require('../../models/Content');
 
 router.route('/').get((req, res) => {
   Content.find()
@@ -12,13 +13,13 @@ router.route('/add').post((req, res) => {
   const totalAmount = req.body.totalAmount;
   const processedText = req.body.processedText;
   // const date = Date.parse(req.body.date);
-
   const newContent = new Content({
     storeName,
     totalAmount,
     processedText,
     // date,
   });
+  console.log('newContent: ', newContent)
 
   newContent.save()
   .then(() => res.json('Content added!'))

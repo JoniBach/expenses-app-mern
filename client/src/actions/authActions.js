@@ -6,6 +6,8 @@ import {
   SET_CURRENT_USER,
   USER_LOADING
 } from "./types";
+
+import data from '../contexts/UploadContext'
 // Register User
 export const registerUser = (userData, history) => dispatch => {
   axios
@@ -31,6 +33,7 @@ export const updateUser = (userData, history) => dispatch => {
       })
     );
 };
+
 // Login - get user token
 export const loginUser = userData => dispatch => {
   axios

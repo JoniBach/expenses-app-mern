@@ -42,12 +42,15 @@ export default function RecordUploadView() {
     const formData = new FormData();
     formData.append("uploadedData", uploadData);
     axios
-      .post("http://localhost:4000/api/user-profile", formData, {})
+      .post("/api/userContent/add", formData, {})
       .then((res) => {
         console.log(res);
       })
       .then(fetchUploadData);
+      // window.location = '/';
+
   };
+  
 
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();

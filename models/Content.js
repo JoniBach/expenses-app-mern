@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 // Create Schema
-const ContentSchema = new Schema({
+const contentSchema = new Schema({
   storeName: {
     type: String,
     required: true
@@ -15,4 +15,4 @@ const ContentSchema = new Schema({
     required: true
   },
 });
-module.exports = Content = mongoose.model("userContent", ContentSchema);
+module.exports = Content = mongoose.model("userContent", contentSchema);
